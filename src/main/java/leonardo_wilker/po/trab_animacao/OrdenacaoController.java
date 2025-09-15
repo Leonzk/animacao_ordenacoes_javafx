@@ -7,6 +7,10 @@ public class OrdenacaoController {
     public static class Troca {
         public int i, j;
         public Troca(int i, int j) { this.i = i; this.j = j; }
+        @Override
+        public String toString() {
+            return "Troca{de=" + i + ", para=" + j + "}\n";
+        }
     }
 
     public List<Troca> heapSortAnimado(int[] arr) {
@@ -21,6 +25,7 @@ public class OrdenacaoController {
             trocas.add(new Troca(0, i));
             heapify(arr, i, 0, trocas);
         }
+        System.out.println(trocas);
         return trocas;
     }
 
@@ -80,23 +85,44 @@ public class OrdenacaoController {
         int len1 = m - l + 1, len2 = r - m;
         int[] left = new int[len1];
         int[] right = new int[len2];
-        for (int x = 0; x < len1; x++)
+        int[] posicoes = new int[len1 + len2]; // Guarda as posições originais
+        
+        // Copia os elementos e suas posições originais
+        for (int x = 0; x < len1; x++) {
             left[x] = arr[l + x];
-        for (int x = 0; x < len2; x++)
+            posicoes[x] = l + x;
+        }
+        for (int x = 0; x < len2; x++) {
             right[x] = arr[m + 1 + x];
+            posicoes[len1 + x] = m + 1 + x;
+        }
 
         int i = 0, j = 0, k = l;
         while (i < len1 && j < len2) {
             if (left[i] <= right[j]) {
+                if (k != posicoes[i]) {
+                    trocas.add(new Troca(posicoes[i], k));
+                }
                 arr[k++] = left[i++];
             } else {
+                if (k != posicoes[len1 + j]) {
+                    trocas.add(new Troca(posicoes[len1 + j], k));
+                }
                 arr[k++] = right[j++];
             }
         }
+        
         while (i < len1) {
+            if (k != posicoes[i]) {
+                trocas.add(new Troca(posicoes[i], k));
+            }
             arr[k++] = left[i++];
         }
+        
         while (j < len2) {
+            if (k != posicoes[len1 + j]) {
+                trocas.add(new Troca(posicoes[len1 + j], k));
+            }
             arr[k++] = right[j++];
         }
     }
