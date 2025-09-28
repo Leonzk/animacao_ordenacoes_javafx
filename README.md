@@ -1,82 +1,175 @@
 # Projeto: Animação de Ordenações em JavaFX
 
-Este projeto demonstra animações dos algoritmos de ordenação HeapSort e TimSort utilizando JavaFX. Cada passo das ordenações é visualizado com botões que representam os valores do vetor, mostrando as trocas e atualizando o vetor em tempo real.
+Este projeto demonstra animações detalhadas dos algoritmos de ordenação HeapSort e TimSort utilizando JavaFX. Cada passo das ordenações é visualizado com botões que representam os valores do vetor, mostrando as trocas, comparações e transformações com animações suaves e código de cores específico para cada operação.
 
-## Passo a Passo de Implementação
+## Algoritmos Implementados
 
-### 1. Estrutura do Projeto
-- O projeto utiliza JavaFX para interface gráfica.
-- As principais classes são:
-  - `Principal.java`: Interface gráfica e animação.
-  - `OrdenacaoController.java`: Algoritmos de ordenação e registro das trocas.
+### 1. HeapSort (Ordenação por Heap)
 
-### 2. Criação das Classes
+O HeapSort é um algoritmo de ordenação que utiliza a estrutura de dados heap (monte). O processo ocorre em duas fases principais:
 
-#### a) Classe Principal
-- Responsável por criar a janela, botões de ordenação, botões para cada valor do vetor e um label para mostrar o vetor atual.
-- Exemplo de inicialização dos botões:
-  ```java
-  int[] valores = {45, 23, 11, 89, 77, 98, 4, 28, 65, 43};
-  vet = new Button[valores.length];
-  for (int i = 0; i < valores.length; i++) {
-      vet[i] = new Button(String.valueOf(valores[i]));
-      // ...estilização e posicionamento...
-  }
-  ```
+#### Fase 1: Construção do Max-Heap
+- **Objetivo**: Transformar o array em um heap máximo, onde cada nó pai é maior que seus filhos
+- **Processo**: Aplica a operação `heapificar` de baixo para cima, começando do último nó não-folha
+- **Complexidade**: O(n log n)
 
-#### b) Classe OrdenacaoController
-- Implementa HeapSort e TimSort.
-- Cada método retorna uma lista de trocas (`List<Troca>`) que indica quais índices foram trocados em cada passo.
-- Exemplo da classe Troca:
-  ```java
-  public static class Troca {
-      public int i, j;
-      public Troca(int i, int j) { this.i = i; this.j = j; }
-  }
-  ```
+#### Fase 2: Extração e Ordenação
+- **Objetivo**: Extrair o maior elemento (raiz) repetidamente e reorganizar o heap
+- **Processo**: 
+  1. Troca a raiz (maior elemento) com o último elemento
+  2. Reduz o tamanho do heap
+  3. Reaplica `heapificar` na nova raiz
+  4. Repete até o heap estar vazio
 
-### 3. Registro das Trocas
-- Durante a execução dos algoritmos, cada troca de elementos é registrada na lista de trocas.
-- No HeapSort, as trocas são registradas no método `heapify` e na extração do maior elemento.
-- No TimSort, as trocas são registradas tanto no `insertionSort` quanto no `merge`.
+#### Código de Cores - HeapSort:
+- **🟡 Dourado (`#FFD700`)**: Nó raiz sendo analisado no heapify
+- **🔵 Azul Claro (`#BBDEFB`)**: Filho esquerdo do nó atual
+- **🔴 Rosa (`#FFCDD2`)**: Filho direito do nó atual  
+- **🟢 Verde Claro (`#C8E6C9`)**: Maior elemento encontrado entre pai e filhos
+- **🟢 Verde Escuro (`#4CAF50`)**: Elementos já ordenados (posição final)
+- **🟣 Rosa Escuro (`#E91E63`)**: Texto das operações de troca
 
-### 4. Animação das Trocas
-- Para cada troca registrada, os botões correspondentes são animados:
-  - Movem para cima/baixo.
-  - Movem lateralmente para trocar de posição.
-  - Voltam à posição original.
-  - Trocam os valores exibidos.
-  - São destacados com cor e borda durante a animação.
-- O vetor é atualizado em um label a cada troca.
-- Exemplo de animação:
-  ```java
-  private void animarTroca(Button btn1, Button btn2, Runnable onComplete) {
-      // ...movimentação e destaque dos botões...
-      // Troca os textos e atualiza o label do vetor
-  }
-  ```
+### 2. TimSort (Ordenação Híbrida)
 
-### 5. Execução dos Algoritmos
-- O usuário pode clicar nos botões "HeapSort" ou "TimSort" para iniciar a animação.
-- Enquanto uma animação está em andamento, não é possível iniciar outra.
+O TimSort é um algoritmo híbrido estável que combina Merge Sort e Insertion Sort, otimizado para dados do mundo real. Foi desenvolvido para Python e é usado como algoritmo padrão de ordenação.
 
-### 6. Estilização
-- Botões de ordenação possuem cores distintas.
-- Botões do vetor são arredondados, com borda e fonte monoespaçada.
-- Botões em troca ficam destacados.
-- O label do vetor mostra o estado atual do vetor.
+#### Fase 1: Divisão em RUNs e Insertion Sort
+- **Objetivo**: Dividir o array em pequenos blocos (RUNs) e ordená-los individualmente
+- **Tamanho do RUN**: 4 elementos (configurável via `TAMANHO_RUN`)
+- **Algoritmo interno**: Insertion Sort para cada RUN
+- **Vantagem**: Insertion Sort é muito eficiente para arrays pequenos
+
+#### Fase 2: Merge dos RUNs
+- **Objetivo**: Mesclar os RUNs ordenados em blocos cada vez maiores
+- **Processo**: 
+  1. Combina RUNs adjacentes de tamanho 4
+  2. Depois combina blocos de tamanho 8
+  3. Continua dobrando o tamanho até o array estar completamente ordenado
+- **Algoritmo**: Merge Sort tradicional para a mesclagem
+
+#### Código de Cores - TimSort:
+
+**Durante Insertion Sort:**
+- **🟡 Dourado (`#FFD700`)**: Elemento atual sendo inserido na posição correta
+- **🟠 Laranja (`#FFE082`)**: RUN atual sendo ordenado (destaque do bloco)
+- **🟢 Verde Claro (`#C8E6C9`)**: Elementos já posicionados corretamente no RUN
+
+**Durante Merge:**
+- **🔵 Azul Claro (`#BBDEFB`)**: RUN da esquerda sendo mesclado
+- **🟠 Laranja Claro (`#FFE0B2`)**: RUN da direita sendo mesclado
+- **🟢 Verde Claro (`#C8E6C9`)**: Elementos já mesclados na posição final
+- **🟢 Verde Muito Claro (`#E8F5E8`)**: Área completamente mesclada
+
+**Finalizações:**
+- **🟢 Verde Escuro (`#4CAF50`)**: Array completamente ordenado
+
+## Estrutura do Projeto
+
+### Classes Principais:
+
+#### 1. `Principal.java`
+- Interface principal da aplicação
+- Controla a janela principal e os botões de seleção
+- Inicializa os visualizadores específicos para cada algoritmo
+
+#### 2. `HeapSortVisualizerController.java`
+- Implementa a visualização completa do HeapSort
+- **Métodos principais**:
+  - `mostrarVisualizacaoHeapSort()`: Inicializa a interface de visualização
+  - `iniciarAnimacaoHeapSort()`: Controla o fluxo das duas fases
+  - `heapificarAnimado()`: Implementa o algoritmo heapify com animação
+  - `trocarAnimado()`: Anima as trocas de elementos com movimento suave
+
+#### 3. `TimSortVisualizerController.java`
+- Implementa a visualização completa do TimSort
+- **Métodos principais**:
+  - `mostrarVisualizacaoTimSort()`: Inicializa a interface de visualização
+  - `iniciarAnimacaoTimSort()`: Controla o fluxo das duas fases
+  - `insertionSortAnimado()`: Insertion Sort animado para cada RUN
+  - `animarTroca()`: Animação das trocas durante insertion sort
+  - `mesclar()`: Merge animado dos RUNs ordenados
+
+## Detalhes das Animações
+
+### Animação de Troca (Ambos os Algoritmos):
+1. **Destaque**: Elementos a serem trocados ficam dourados
+2. **Movimento Vertical**: Elementos sobem/descem para criar separação visual
+3. **Movimento Horizontal**: Elementos se movem lateralmente para trocar posições
+4. **Retorno Vertical**: Elementos voltam à linha original
+5. **Finalização**: Textos são trocados e estilos restaurados
+
+### Sincronização:
+- Todas as animações são executadas em threads separadas para não bloquear a interface
+- `Platform.runLater()` é usado para atualizar a interface a partir de threads de background
+- Tempos de sleep calibrados para permitir visualização clara de cada passo
+
+## Características Educacionais
+
+### Labels Informativos:
+- **Fase atual**: Indica qual fase do algoritmo está executando
+- **Operação específica**: Descreve a operação atual (ex: "Heapificando subárvore em 2")
+- **Progresso**: Mostra qual RUN ou qual troca está sendo processada
+
+### Código de Cores Pedagógico:
+Cada cor tem um significado específico para ajudar na compreensão:
+- **Elementos em análise**: Sempre em tons de dourado/amarelo
+- **Elementos sendo comparados**: Azul e rosa para distinção
+- **Elementos corretos**: Verde em diferentes intensidades
+- **Áreas de trabalho**: Laranja para delimitar seções
 
 ## Como Executar
-1. Compile e execute a classe `Principal.java`.
-2. A janela mostrará os botões do vetor e os botões de ordenação.
-3. Clique em "HeapSort" ou "TimSort" para ver a animação do algoritmo escolhido.
-4. Observe as trocas e o vetor sendo atualizado passo a passo.
 
-## Observações
-- O projeto pode ser expandido para outros algoritmos de ordenação.
-- A animação pode ser ajustada alterando os valores de `Thread.sleep()` para modificar a velocidade.
-- O código está preparado para ser facilmente adaptado para outros tipos de visualização.
+### Pré-requisitos:
+- Java 11 ou superior
+- JavaFX SDK configurado
+- IDE com suporte a JavaFX (recomendado: IntelliJ IDEA ou Eclipse)
+
+### Passos:
+1. Clone o repositório
+2. Configure o JavaFX no seu ambiente de desenvolvimento
+3. Compile o projeto
+4. Execute a classe `Principal.java`
+5. Clique em "HeapSort" ou "TimSort" para iniciar a visualização
+
+### Configurações Personalizáveis:
+- **Velocidade da animação**: Modifique os valores `Thread.sleep()` nos métodos
+- **Tamanho do RUN (TimSort)**: Altere a constante `TAMANHO_RUN`
+- **Array inicial**: Modifique o array `valores` na classe `Principal`
+
+## Valor Educacional
+
+Este projeto foi desenvolvido com foco educacional para:
+
+### Para Estudantes:
+- **Visualização clara** dos passos de cada algoritmo
+- **Compreensão das diferenças** entre algoritmos de ordenação
+- **Observação da complexidade** na prática
+- **Identificação de padrões** de movimento dos dados
+
+### Para Educadores:
+- **Ferramenta interativa** para demonstrações em sala
+- **Código bem documentado** para explicar implementações
+- **Possibilidade de modificação** para outros algoritmos
+- **Base para projetos** de algoritmos e estruturas de dados
+
+## Extensibilidade
+
+O projeto está estruturado para fácil extensão:
+- Adicione novos algoritmos criando novos `VisualizerController`
+- Modifique cores e estilos nos métodos de estilização
+- Implemente novos tipos de animação nos métodos de movimento
+- Adicione controles de velocidade e pausa
+
+## Tecnologias Utilizadas
+
+- **JavaFX**: Interface gráfica e animações
+- **Java Threads**: Execução assíncrona dos algoritmos
+- **Platform.runLater()**: Sincronização com a thread da interface
+- **TranslateTransition**: Animações suaves de movimento
+- **ParallelTransition**: Execução simultânea de múltiplas animações
 
 ---
 
-**Autor:** Leonardo Wilker
+**Autor:** Leonardo Wilker  
+**Objetivo:** Material educacional para ensino de algoritmos de ordenação  
+**Licença:** Livre para uso educacional
