@@ -193,15 +193,13 @@ public class Principal extends Application {
 
     private void iniciarTimSort() {
         if (animacaoEmAndamento) return;
-        animacaoEmAndamento = true;
         
-        OrdenacaoController controller = new OrdenacaoController();
         int[] valores = new int[vet.length];
         for (int i = 0; i < vet.length; i++) {
             valores[i] = Integer.parseInt(vet[i].getText());
         }
         
-        List<OrdenacaoController.Troca> trocas = controller.timSortAnimado(valores);
-        animarTrocas(trocas);
+        TimSortVisualizerController visualizer = new TimSortVisualizerController();
+        visualizer.showTimSortVisualization(valores);
     }
 }
